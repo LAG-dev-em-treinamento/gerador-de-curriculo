@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Currículos - Super Customizado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Importação de fontes do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lora:wght@400;700&family=Roboto+Mono&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&family=Lato:wght@400;700&family=Montserrat:wght@400;700&family=Poppins:wght@400;700&family=Raleway:wght@400;700&family=Oswald:wght@400;700&family=Ubuntu:wght@400;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=PT+Serif:wght@400;700&family=Crimson+Text:wght@400;700&family=Libre+Baskerville:wght@400;700&family=Arvo:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=Arimo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --site-bg: #eef2f7;
+            --cv-font-color: #1e293b;
+            --cv-font-family: 'Inter', sans-serif;
+            --interface-text: #1e293b;
+            --card-bg: #ffffff;
+            --input-border: #d1d5db;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--site-bg);
+            color: var(--interface-text);
+            transition: all 0.3s ease;
+        }
+
+        /* Preview A4 */
+        #cv-preview {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            margin: auto;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            color: var(--cv-font-color);
+            font-family: var(--cv-font-family);
+        }
+
+        /* Estilos do Editor */
+        #editor-panel {
+            background-color: var(--card-bg);
+            border-color: var(--input-border);
+        }
+
+        .input-field {
+            background-color: transparent;
+            color: inherit;
+            border: 1px solid var(--input-border);
+            @apply w-full p-2.5 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none mb-4 transition-all;
+        }
+
+        .section-title {
+            @apply text-lg font-bold border-b-2 mb-3 pb-1 uppercase tracking-widest;
+            border-color: currentColor;
+            opacity: 0.8;
+        }
+
+        /* Classes para as prévias das fontes no dropdown */
+        .f-inter { font-family: 'Inter', sans-serif; }
+        .f-roboto { font-family: 'Roboto', sans-serif; }
+        .f-opensans { font-family: 'Open Sans', sans-serif; }
+        .f-lato { font-family: 'Lato', sans-serif; }
+        .f-montserrat { font-family: 'Montserrat', sans-serif; }
+        .f-poppins { font-family: 'Poppins', sans-serif; }
+        .f-raleway { font-family: 'Raleway', sans-serif; }
+        .f-oswald { font-family: 'Oswald', sans-serif; }
+        .f-ubuntu { font-family: 'Ubuntu', sans-serif; }
+        .f-arimo { font-family: 'Arimo', sans-serif; }
+        .f-lora { font-family: 'Lora', serif; }
+        .f-merriweather { font-family: 'Merriweather', serif; }
+        .f-playfair { font-family: 'Playfair Display', serif; }
+        .f-ptserif { font-family: 'PT Serif', serif; }
+        .f-crimson { font-family: 'Crimson Text', serif; }
+        .f-baskerville { font-family: 'Libre Baskerville', serif; }
+        .f-arvo { font-family: 'Arvo', serif; }
+        .f-robomono { font-family: 'Roboto Mono', monospace; }
+        .f-jetbrains { font-family: 'JetBrains Mono', monospace; }
+        .f-spacemono { font-family: 'Space Mono', monospace; }
+
+        @media print {
+            body { background: white !important; padding: 0; }
+            .no-print { display: none; }
+            #cv-preview {
+                box-shadow: none;
+                margin: 0;
+                width: 100%;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-10 no-print flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-4xl font-extrabold" id="main-title">Criador de CV</h1>
+                <p class="opacity-70" id="main-subtitle">Edite as informações e exporte em PDF.</p>
+            </div>
+            <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Gerar Currículo
+            </button>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <!-- Formulário -->
+            <aside id="editor-panel" class="no-print p-8 rounded-2xl shadow-sm space-y-8 border">
+                
+                <!-- SEÇÃO DE PERSONALIZAÇÃO -->
+                <section class="bg-indigo-600/10 p-5 rounded-xl border border-indigo-500/20">
+                    <h2 class="text-sm font-bold mb-4 uppercase tracking-tight flex items-center gap-2 text-indigo-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        Painel de Design
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 gap-5">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <label class="text-xs font-bold opacity-70">Cor do Site</label>
+                            <div class="flex gap-2">
+                                <button onclick="changeSiteBg('#ffffff')" class="w-8 h-8 rounded-full border border-gray-300 bg-white" title="Branco"></button>
+                                <button onclick="changeSiteBg('#111827')" class="w-8 h-8 rounded-full border border-gray-300 bg-gray-900" title="Preto"></button>
+                                <button onclick="changeSiteBg('#334155')" class="w-8 h-8 rounded-full border border-gray-300 bg-slate-700" title="Cinza"></button>
+                                <input type="color" oninput="changeSiteBg(this.value)" class="w-8 h-8 p-0 border-0 bg-transparent cursor-pointer">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-bold mb-2 opacity-70">Escolha a sua Letra</label>
+                            <select id="font-select" onchange="changeFontFamily(this.value)" class="text-sm p-3 rounded-lg border border-gray-300 w-full bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm">
+                                <optgroup label="Mais Utilizados (Padrão de Mercado)">
+                                    <option value="'Inter', sans-serif" class="f-inter">Aa - Inter (Recomendado)</option>
+                                    <option value="'Arimo', sans-serif" class="f-arimo">Aa - Arial Nova</option>
+                                    <option value="'Roboto', sans-serif" class="f-roboto">Aa - Roboto</option>
+                                    <option value="'Open Sans', sans-serif" class="f-opensans">Aa - Open Sans</option>
+                                    <option value="'Lato', sans-serif" class="f-lato">Aa - Lato</option>
+                                    <option value="'PT Serif', serif" class="f-ptserif">Aa - PT Serif (Clássico)</option>
+                                </optgroup>
+                                <optgroup label="Méritos (Estilo e Diferenciação)">
+                                    <option value="'Montserrat', sans-serif" class="f-montserrat">Aa - Montserrat</option>
+                                    <option value="'Poppins', sans-serif" class="f-poppins">Aa - Poppins</option>
+                                    <option value="'Raleway', sans-serif" class="f-raleway">Aa - Raleway</option>
+                                    <option value="'Merriweather', serif" class="f-merriweather">Aa - Merriweather</option>
+                                    <option value="'Playfair Display', serif" class="f-playfair">Aa - Playfair Display</option>
+                                    <option value="'Lora', serif" class="f-lora">Aa - Lora</option>
+                                    <option value="'Ubuntu', sans-serif" class="f-ubuntu">Aa - Ubuntu</option>
+                                    <option value="'Crimson Text', serif" class="f-crimson">Aa - Crimson Text</option>
+                                    <option value="'Libre Baskerville', serif" class="f-baskerville">Aa - Libre Baskerville</option>
+                                </optgroup>
+                                <optgroup label="Técnicos (Para Tech/Programação)">
+                                    <option value="'JetBrains Mono', monospace" class="f-jetbrains">Aa - JetBrains Mono</option>
+                                    <option value="'Roboto Mono', monospace" class="f-robomono">Aa - Roboto Mono</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold mb-2 opacity-70">Cor do Texto no Papel</label>
+                            <input type="color" value="#1e293b" oninput="changeFontColor(this.value)" class="w-full h-10 rounded-lg cursor-pointer border-0 bg-gray-100/50">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">1</div>
+                        Dados Pessoais
+                    </h2>
+                    <input type="text" id="name" placeholder="Nome Completo" class="input-field" oninput="updateCV()">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="email" id="email" placeholder="E-mail" class="input-field" oninput="updateCV()">
+                        <input type="text" id="phone" placeholder="Telefone" class="input-field" oninput="updateCV()">
+                    </div>
+                    <input type="text" id="location" placeholder="Cidade - UF" class="input-field" oninput="updateCV()">
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">2</div>
+                        Sobre Você
+                    </h2>
+                    <textarea id="summary" placeholder="Resumo profissional e objetivos..." class="input-field h-28" oninput="updateCV()"></textarea>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">3</div>
+                        Trajetória Profissional
+                    </h2>
+                    <textarea id="experience" placeholder="Experiências Profissionais..." class="input-field h-36" oninput="updateCV()"></textarea>
+                    <textarea id="education" placeholder="Formação Acadêmica..." class="input-field h-28" oninput="updateCV()"></textarea>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <div class="w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">4</div>
+                        Competências
+                    </h2>
+                    <input type="text" id="skills" placeholder="Habilidades (ex: Java, Python, Gestão)" class="input-field" oninput="updateCV()">
+                </section>
+            </aside>
+
+            <!-- Preview A4 -->
+            <main class="overflow-x-auto pb-10">
+                <div id="cv-preview">
+                    <header class="text-center mb-10">
+                        <h1 id="p-name" class="text-4xl font-bold mb-3 tracking-tight">SEU NOME</h1>
+                        <div class="text-sm opacity-70 font-medium tracking-wide">
+                            <span id="p-location">Localização</span> | 
+                            <span id="p-phone">Telefone</span> | 
+                            <span id="p-email">Email</span>
+                        </div>
+                    </header>
+
+                    <section class="mb-8">
+                        <h2 class="section-title">Resumo Profissional</h2>
+                        <p id="p-summary" class="text-sm leading-relaxed whitespace-pre-line opacity-90">
+                            Preencha os campos ao lado para gerar o seu currículo profissional.
+                        </p>
+                    </section>
+
+                    <section class="mb-8">
+                        <h2 class="section-title">Experiência Profissional</h2>
+                        <div id="p-experience" class="text-sm whitespace-pre-line opacity-90">
+                            Suas experiências aparecerão formatadas aqui.
+                        </div>
+                    </section>
+
+                    <section class="mb-8">
+                        <h2 class="section-title">Formação Acadêmica</h2>
+                        <div id="p-education" class="text-sm whitespace-pre-line opacity-90">
+                            Sua formação acadêmica aparecerá aqui.
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2 class="section-title">Habilidades Técnicas</h2>
+                        <div id="p-skills" class="flex flex-wrap gap-2 text-sm opacity-90">
+                            Habilidades aparecerão como tags.
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function changeSiteBg(color) {
+            const r = document.documentElement;
+            r.style.setProperty('--site-bg', color);
+            const isDark = isColorDark(color);
+            if (isDark) {
+                r.style.setProperty('--interface-text', '#cbd5e1'); 
+                r.style.setProperty('--card-bg', '#1e293b');       
+                r.style.setProperty('--input-border', '#475569');   
+            } else {
+                r.style.setProperty('--interface-text', '#1e293b'); 
+                r.style.setProperty('--card-bg', '#ffffff');       
+                r.style.setProperty('--input-border', '#d1d5db');   
+            }
+        }
+
+        function changeFontColor(color) {
+            document.documentElement.style.setProperty('--cv-font-color', color);
+        }
+
+        function changeFontFamily(family) {
+            document.documentElement.style.setProperty('--cv-font-family', family);
+            document.getElementById('font-select').style.fontFamily = family;
+        }
+
+        function isColorDark(color) {
+            const hex = color.replace('#', '');
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            return brightness < 128;
+        }
+
+        function updateCV() {
+            const fields = ['name', 'email', 'phone', 'location', 'summary', 'experience', 'education'];
+            const defaults = {
+                name: "SEU NOME",
+                email: "Email",
+                phone: "Telefone",
+                location: "Localização",
+                summary: "Preencha os campos ao lado para gerar o seu currículo profissional.",
+                experience: "Suas experiências aparecerão formatadas aqui.",
+                education: "Sua formação acadêmica aparecerá aqui."
+            };
+
+            fields.forEach(field => {
+                const inputVal = document.getElementById(field).value;
+                const previewElement = document.getElementById(`p-${field}`);
+                previewElement.innerText = inputVal.trim() === "" ? defaults[field] : inputVal;
+            });
+
+            const skillsVal = document.getElementById('skills').value;
+            const skillsContainer = document.getElementById('p-skills');
+            if (skillsVal.trim() !== "") {
+                const skillsList = skillsVal.split(',').map(s => s.trim()).filter(s => s !== "");
+                skillsContainer.innerHTML = skillsList.map(skill => 
+                    `<span style="border: 1px solid currentColor; padding: 2px 8px; border-radius: 4px; opacity: 0.8; font-size: 0.8rem;">${skill}</span>`
+                ).join('');
+            } else {
+                skillsContainer.innerHTML = "Habilidades aparecerão como tags.";
+            }
+        }
+
+        window.onload = () => {
+            updateCV();
+            changeSiteBg('#eef2f7'); 
+        };
+    </script>
+</body>
+</html>
